@@ -27,14 +27,27 @@ const createInnerHtml = () => {
    <td>${employee._salary}</td>
    <td>${new Date(employee._startDate).toDateString().slice(4,)}</td>
    <td>
-       <img name="${employee._id}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
-       <img name="${employee._id}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
+   <img id="${employee._name}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
+   <img id="${employee._id}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
    </td>
 </tr>
    `;
 }
    document.querySelector("#display").innerHTML = innerHtml;
 };
+
+const remove = (node) => {
+    console.log(node.name);
+    let employee = employeePayrollList.find(emp => emp._name == node.id);
+    if(!employee) return;
+    const index = employeePayrollList.map(emp => emp._name)
+                                     .indexOf(employee._name);
+    employeePayrollList.splice(index, 1);
+    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
+    document.querySelector(".emp-count").textContent = employeePayrollList.length;
+    createInnerHtml();
+};
+
 
 const getDeptHtml = (deptList) => {
     let deptHtml = ``;
