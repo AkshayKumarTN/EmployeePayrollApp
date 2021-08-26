@@ -26,10 +26,10 @@ const createInnerHtml = () => {
    <td>${employee._gender}</td>
    <td>${getDeptHtml(employee._department)}</td>
    <td>${employee._salary}</td>
-   <td>${new Date(employee._startDate).toDateString().slice(4,)}</td>
+   <td>${stringifyDate(employee._startDate)}</td>
    <td>
-        <img id="${employee._id}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
-        <img id="${employee._name}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
+       <img id="${employee._id}" onclick="remove(this)" alt="delete" src="../assets/icons/delete-black-18dp.svg">
+       <img id="${employee._id}" alt="edit" onclick="update(this)" src="../assets/icons/create-black-18dp.svg">
    </td>
 </tr>
    `;
@@ -41,35 +41,22 @@ const remove = (node) => {
     let employee = employeePayrollList.find(emp => emp._id == node.id);
     if(!employee) return;
     const index = employeePayrollList.map(emp => emp._id).indexOf(employee._id);
-
     employeePayrollList.splice(index, 1);
     localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
     document.querySelector(".emp-count").textContent = employeePayrollList.length;
     createInnerHtml();
 };
 
-
 const getDeptHtml = (deptList) => {
-    let deptHtml = ``;
-    if(deptList[0].length==1)
-    {
-        dep="";
-        for(const dept of deptList){
-            dep+=dept;
-        }
-    
-        return `<div class="dept-label">${deptList}</div>`
+    let deptHtml = "";
+    for(const dept of deptList){
+        deptHtml = `${deptHtml}<div class="dept-label">${dept}</div>`
     }
-    else
-    {
-        for(const dept of deptList){
-                deptHtml = `${deptHtml}<div class="dept-label">${dept}</div>   `;
-        }
-        return deptHtml;
-    }
+    return deptHtml;
 };
+
 const update = (node) => {
-    let employee = employeePayrollList.find((emp) => emp._name == node.id);
+    let employee = employeePayrollList.find((emp) => emp._id == node.id);
     if (!employee) return;
     localStorage.setItem("editEmp", JSON.stringify(employee));
     window.location.replace(site_properties.add_emp_payroll_page);
