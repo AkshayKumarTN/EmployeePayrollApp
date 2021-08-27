@@ -26,18 +26,6 @@
         "_picture": "../assets/profile-images/Ellipse -1.png"
       },
       {
-        "_name": "Satyaki Ghosh",
-        "_gender": "male",
-        "_department": [
-          "Sales"
-        ],
-        "_salary": "4000",
-        "_startDate": "29 Oct 2019",
-        "_note": "",
-        "_picture": "../assets/profile-images/Ellipse -3.png",
-        "id": 3
-      },
-      {
         "_name": "Arijit",
         "_picture": "../assets/profile-images/Ellipse -3.png",
         "_gender": "male",
