@@ -17,7 +17,7 @@ name.addEventListener('input', function(){
     return;
   }
   try{
-    (new EmployeePayrollData()).name = name.value;
+    checkName(name.value);
     setTextValue(".text-error", "");
   }catch(e){
     setTextValue(".text-error", e);
@@ -29,13 +29,16 @@ const day = document.querySelector("#day");
 const month = document.querySelector("#month");
 const year = document.querySelector("#year");
 startDate.addEventListener("input", function(){
+  let startDate = new Date( Date.UTC(year.value, month.value - 1, day.value));
    try{
-   new EmployeePayrollData().startDate = new Date( Date.UTC(year.value, month.value - 1, day.value));
+    checkStartDate(new Date(Date.parse(startDate)));
     setTextValue(".date-error","");
   }catch(e){
     setTextValue(".date-error",e);
   }
 });
+
+document.querySelector(".cancelButton").href = site_properties.home_page;
 checkForUpdate();
 });
 
@@ -55,46 +58,17 @@ const save = (event) => {
 function createAndUpdateStorage(){
   let employeeList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
   if(employeeList){
-    let employee = employeeList.find(emp => emp._id == employeePayrollObj._id);
-    if(!employee) employeeList.push(saveData());
+    let employee = employeeList.find(emp => emp.id == employeePayrollObj.id);
+    if(!employee) employeeList.push(employeePayrollObj);
     else{
-      const index = employeeList.map(emp => emp._id).indexOf(employee._id);
-      employeeList.splice(index, 1, createEmpData(employee._id));
+      const index = employeeList.map(emp => emp.id).indexOf(employee.id);
+      employeeList.splice(index, 1, employeePayrollObj);
     }
-  }else{
-    employeeList = [saveData()];
   }
-  localStorage.setItem("EmployeePayrollList", JSON.stringify(employeeList));
-  alert(employeeList.toString());
-};
-
-const createEmpData = (id) => {
-   let employee = new EmployeePayrollData();
-   if(!id) employee.id = createNewId();
-   else employee.id = id;
-   setEmpPayrollData(employee);
-   return employee;
-};
-
-const setEmpPayrollData = (employee) => {
-  try{
-    employee.name = employeePayrollObj._name;
-  }catch(e){
-    setTextValue(".text-error", e);
-    throw e;
+  else{
+    employeeList = [employeePayrollObj];
   }
-  employee.picture = employeePayrollObj._picture;
-  employee.gender = employeePayrollObj._gender;
-  employee.department = employeePayrollObj._department;
-  employee.salary = employeePayrollObj._salary;
-  employee.note = employeePayrollObj._note;
-  try{
-    employee.startDate = new Date(Date.parse(employeePayrollObj._startDate));
-  }catch(e){
-    setTextValue(".date-error", e);
-    throw e;
-  }
-  alert(employee.toString());
+  localStorage.setItem("EmployeePayrollList", JSON.stringify(employeeList));  
 };
 
 const createNewId = () => {
@@ -113,24 +87,10 @@ const getSelectedValues = (property) => {
   return setItems;
 };
 
-function saveData(){
-  let employee = new EmployeePayrollData();
-  employee.id = createNewId();
-  employee.name= document.getElementById("name").value;
-  employee.picture = document.querySelector('input[name = profile]:checked').value;
-  employee.gender = document.querySelector('input[name = gender]:checked').value;
-  employee.department =getSelectedValues('[name=department]');
-  employee.salary = document.getElementById("salary").value;
-  var day = document.getElementById("day").value;
-  var month = document.getElementById("month").value;
-  var year = document.getElementById("year").value;
-  employee.note = document.getElementById("notes").value;
-  employee.startDate = new Date(parseInt(year), parseInt(month) - 1 , parseInt(day));
-  alert(employee.toString());
- return employee;
-}
-
 const setEmployeePayrollObject = () => {
+  if(!isUpdate && site_properties.use_local_storage.match("true")){
+    employeePayrollObj.id = createNewId();
+  }
   employeePayrollObj._name= document.getElementById("name").value;
   employeePayrollObj._picture = document.querySelector('input[name = profile]:checked').value;
   employeePayrollObj._gender = document.querySelector('input[name = gender]:checked').value;
