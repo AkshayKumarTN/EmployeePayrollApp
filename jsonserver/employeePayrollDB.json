@@ -36,6 +36,19 @@
         "_note": "",
         "_picture": "../assets/profile-images/Ellipse -3.png",
         "id": 3
+      },
+      {
+        "_name": "Arijit",
+        "_picture": "../assets/profile-images/Ellipse -3.png",
+        "_gender": "male",
+        "_department": [
+          "Finance",
+          "Engineer"
+        ],
+        "_salary": "6900",
+        "_note": "",
+        "_startDate": "2020-11-16T18:30:00.000Z",
+        "id": 4
       }
     ]
   }
